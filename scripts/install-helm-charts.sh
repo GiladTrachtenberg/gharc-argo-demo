@@ -83,6 +83,8 @@ helm repo update
 if ! helm list -n actions-runner-controller | grep -q "actions-runner-controller"; then
   echo -e "${BLUE}Installing GH-Arc operator...${NC}"
   helm upgrade --install --namespace actions-runner-controller --create-namespace \
+    --set authSecret.github_token=YOUR_GITHUB_TOKEN \
+    --set=authSecret.create=true \
     --wait actions-runner-controller actions-runner-controller/actions-runner-controller
 else
   echo -e "${GREEN}GH-Arc operator already installed!${NC}"
