@@ -63,14 +63,15 @@ kubectl config use-context kind-arc-demo || {
 echo -e "${BLUE}Ensuring Cert-Manager operator is installed...${NC}"
 helm repo add jetstack https://charts.jetstack.io --force-update
 helm repo update
-if ! helm list -n jetstack | grep -q "jetstack"; then
+if ! helm list -n cert-manager | grep -q "cert-manager"; then
   echo -e "${BLUE}Installing Cert-Manager operator...${NC}"
   helm install \
     cert-manager jetstack/cert-manager \
     --namespace cert-manager \
     --create-namespace \
     --version v1.17.2 \
-    --set crds.enabled=true
+    --set crds.enabled=true \
+    --wait
 else
   echo -e "${GREEN}Cert-Manager operator already installed!${NC}"
 fi
@@ -81,7 +82,7 @@ helm repo add actions-runner-controller https://actions-runner-controller.github
 helm repo update
 if ! helm list -n actions-runner-controller | grep -q "actions-runner-controller"; then
   echo -e "${BLUE}Installing GH-Arc operator...${NC}"
-  helm upgrade --install --namespace actions-runner-system --create-namespace \
+  helm upgrade --install --namespace actions-runner-controller --create-namespace \
     --wait actions-runner-controller actions-runner-controller/actions-runner-controller
 else
   echo -e "${GREEN}GH-Arc operator already installed!${NC}"
